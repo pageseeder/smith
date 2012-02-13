@@ -1,6 +1,6 @@
 package com.weborganic.smith.rule;
 
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.util.Map;
 
 import com.weborganic.smith.PasswordRule;
@@ -12,7 +12,7 @@ import com.weborganic.smith.function.ScoreArray;
  * Evaluate a password based the number of mixed case pairs.
  *
  * @author Christophe Lauret
- * @version 9 February 2012
+ * @version 14 February 2012
  */
 public class MixedCaseRule implements PasswordRule, Scriptable {
 
@@ -42,16 +42,15 @@ public class MixedCaseRule implements PasswordRule, Scriptable {
   }
 
   @Override
-  public void toScript(PrintWriter out) {
-    if (!(this._function instanceof Scriptable)) return;
-    out.println("function (p) {");
-    out.print("  var f = ");
-    ((Scriptable)this._function).toScript(out);
-    out.println(";");
-    out.println("  var l = p.length - p.replace(/[a-z]/g, '').length;");
-    out.println("  var u = p.length - p.replace(/[A-Z]/g, '').length;");
-    out.println("  return f(Math.min(l,u));");
-    out.print("}");
+  public Appendable toScript(Appendable script) throws IOException {
+    script.append("function (p) {");
+    script.append(" var f = ");
+    this._function.toScript(script).append(";");
+    script.append(" var l = p.length - p.replace(/[a-z]/g, '').length;");
+    script.append(" var u = p.length - p.replace(/[A-Z]/g, '').length;");
+    script.append(" return f(Math.min(l,u));");
+    script.append("}");
+    return script;
   }
 
 }

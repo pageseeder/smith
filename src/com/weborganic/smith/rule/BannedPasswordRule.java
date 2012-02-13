@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,7 +18,7 @@ import com.weborganic.smith.Scriptable;
  * Evaluate a password by checking against a list of banned passwords.
  *
  * @author Christophe Lauret
- * @version 9 February 2012
+ * @version 14 February 2012
  */
 public class BannedPasswordRule implements PasswordRule, Scriptable {
 
@@ -126,18 +125,19 @@ public class BannedPasswordRule implements PasswordRule, Scriptable {
   }
 
   @Override
-  public void toScript(PrintWriter out) {
-    out.println("function (p) {");
+  public Appendable toScript(Appendable script) throws IOException {
+    script.append("function (p) {");
     // Store array
-    out.print("  var b = [");
+    script.append(" var b = [");
     for (Iterator<String> words = this._banned.iterator(); words.hasNext(); ) {
       String word = words.next();
       // TODO escape if contains single quote
-      out.print("'"+word+"'");
-      if (words.hasNext()) out.print(',');
+      script.append("'"+word+"'");
+      if (words.hasNext()) script.append(',');
     }
-    out.print("];");
-    out.println(" return b.indexOf(p) !== -1? "+this.forBanned+" : "+this.forAllowed+";");
-    out.print("}");
+    script.append("];");
+    script.append(" return b.indexOf(p) !== -1? "+this.forBanned+" : "+this.forAllowed+";");
+    script.append("}");
+    return script;
   }
 }

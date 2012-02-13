@@ -12,7 +12,7 @@ import java.util.Map;
  * @author Christophe Lauret
  * @version 9 February 2012
  */
-public interface PasswordRule {
+public interface PasswordRule extends Scriptable {
 
   /**
    * Configures the specified rule.

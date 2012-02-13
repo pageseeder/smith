@@ -1,6 +1,6 @@
 package com.weborganic.smith;
 
-import java.io.PrintWriter;
+import java.io.IOException;
 
 
 /**
@@ -8,9 +8,9 @@ import java.io.PrintWriter;
  *
  *
  * @author Christophe Lauret
- * @version 9 February 2012
+ * @version 14 February 2012
  */
-public final class PasswordMeter {
+public final class PasswordMeter implements Scriptable {
 
   /**
    * The configuration used by this meter.
@@ -79,11 +79,32 @@ public final class PasswordMeter {
     return this._config;
   }
 
+  @Override
+  public Appendable toScript(Appendable script) throws IOException {
+    script.append("var SMITH = {};");
+    script.append("(function () {");
+    // Score function
+    script.append(" var score = function score(password) {");
+    script.append(" var rules = [];");
+    for (PasswordRule rule : this._config.rules()) {
+      script.append(" rules.push(");
+      rule.toScript(script).append(");\n");
+    }
+    script.append(" var s = 0;");
+    script.append(" for (var i=0; i < rules.length; i++) { s += rules[i](password); }");
+    script.append(" return s;");
+    script.append(" };");
+    // Export
+    script.append("  SMITH.score = score;");
+    script.append("})();");
+    return script;
+  }
+
   /**
    *
    * @param args
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     PasswordMeter meter = new PasswordMeter();
     String password = "";
     int score = meter.score(password);
@@ -93,14 +114,8 @@ public final class PasswordMeter {
       System.out.println(rule.getClass().getSimpleName()+"="+rule.score(password));
     }
 
-    PrintWriter script = new PrintWriter(System.err);
-    for (PasswordRule rule : meter.configuration().rules()) {
-      if (rule instanceof Scriptable) {
-        System.err.println(rule.toString());
-        ((Scriptable)rule).toScript(script);
-      }
-      script.flush();
-    }
+    // Generate the JavaScript
+    meter.toScript(System.err);
 
   }
 

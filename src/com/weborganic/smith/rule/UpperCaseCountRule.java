@@ -1,6 +1,6 @@
 package com.weborganic.smith.rule;
 
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.util.Map;
 
 import com.weborganic.smith.PasswordRule;
@@ -39,14 +39,13 @@ public class UpperCaseCountRule implements PasswordRule, Scriptable {
   }
 
   @Override
-  public void toScript(PrintWriter out) {
-    if (!(this._function instanceof Scriptable)) return;
-    out.println("function (p) {");
-    out.print("  var f = ");
-    ((Scriptable)this._function).toScript(out);
-    out.println(";");
-    out.println("  var n = p.length - p.replace(/[A-Z]/g, '').length;");
-    out.println("  return f(n);");
-    out.print("}");
+  public Appendable toScript(Appendable script) throws IOException {
+    script.append("function (p) {");
+    script.append(" var f = ");
+    this._function.toScript(script).append(";");
+    script.append(" var n = p.length - p.replace(/[A-Z]/g, '').length;");
+    script.append(" return f(n);");
+    script.append("}");
+    return script;
   }
 }

@@ -1,6 +1,6 @@
 package com.weborganic.smith.function;
 
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,7 +14,7 @@ import com.weborganic.smith.Scriptable;
  * A utility class for scores
  *
  * @author Christophe Lauret
- * @version 9 February 2012
+ * @version 14 February 2012
  */
 public final class ScoreArray extends ScoreFunctionBase implements ScoreFunction, Scriptable {
 
@@ -117,20 +117,21 @@ public final class ScoreArray extends ScoreFunctionBase implements ScoreFunction
   }
 
   @Override
-  public void toScript(PrintWriter out){
-    out.print("function (i) {");
+  public Appendable toScript(Appendable script) throws IOException {
+    script.append("function (i) {");
     // Store array
-    out.print("  var x = [");
+    script.append(" var x = [");
     for (int i = 0; i < this._scores.length; i++) {
-      if (i > 0) out.print(',');
-      out.print(this._scores[i]);
+      if (i > 0) script.append(',');
+      script.append(Integer.toString(this._scores[i]));
     }
-    out.print("];");
+    script.append("];");
     // Do function
-    out.print(" if (i < 0 || x.length === 0) return 0;");
-    out.print(" if (i < x.length) return x[i];");
-    out.print(" return x[x.length -1];");
-    out.print("}");
+    script.append(" if (i < 0 || x.length === 0) return 0;");
+    script.append(" if (i < x.length) return x[i];");
+    script.append(" return x[x.length -1];");
+    script.append("}");
+    return script;
   }
 
   public static void main(String[] args) {

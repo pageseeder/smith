@@ -1,6 +1,6 @@
 package com.weborganic.smith.rule;
 
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.util.Map;
 
 import com.weborganic.smith.PasswordRule;
@@ -12,7 +12,7 @@ import com.weborganic.smith.function.ScoreArray;
  * A rule based on the number of digits [0-9] in the password.
  *
  * @author Christophe Lauret
- * @version 9 February 2012
+ * @version 14 February 2012
  */
 public class DigitCountRule implements PasswordRule, Scriptable {
 
@@ -39,14 +39,13 @@ public class DigitCountRule implements PasswordRule, Scriptable {
   }
 
   @Override
-  public void toScript(PrintWriter out) {
-    if (!(this._function instanceof Scriptable)) return;
-    out.println("function (p) {");
-    out.print("  var f = ");
-    ((Scriptable)this._function).toScript(out);
-    out.println(";");
-    out.println("  var n = p.length - p.replace(/[0-9]/g, '').length;");
-    out.println("  return f(n);");
-    out.print("}");
+  public Appendable toScript(Appendable script) throws IOException {
+    script.append("function (p) {");
+    script.append(" var f = ");
+    this._function.toScript(script).append(";");
+    script.append(" var n = p.length - p.replace(/[0-9]/g, '').length;");
+    script.append(" return f(n);");
+    script.append("}");
+    return script;
   }
 }

@@ -1,6 +1,6 @@
 package com.weborganic.smith.function;
 
-import java.io.PrintWriter;
+import java.io.IOException;
 
 import com.weborganic.smith.ScoreFunction;
 import com.weborganic.smith.Scriptable;
@@ -9,7 +9,7 @@ import com.weborganic.smith.Scriptable;
  * Returns the score linearly based on the given value.
  *
  * @author Christophe Lauret
- * @version 9 February 2012
+ * @version 14 February 2012
  */
 public class LinearScore implements ScoreFunction, Scriptable {
 
@@ -48,10 +48,10 @@ public class LinearScore implements ScoreFunction, Scriptable {
   }
 
   @Override
-  public void toScript(PrintWriter out) {
-    out.println("function (i) {");
-    out.println("  var f = "+this._factor+";");
-    out.println("  return i * f;");
-    out.print("}");
+  public Appendable toScript(Appendable script)  throws IOException{
+    script.append("function (i) {");
+    script.append(" return i * "+this._factor+";");
+    script.append("}");
+    return script;
   }
 }

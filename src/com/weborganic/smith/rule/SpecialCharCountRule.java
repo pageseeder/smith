@@ -1,9 +1,11 @@
 package com.weborganic.smith.rule;
 
+import java.io.IOException;
 import java.util.Map;
 
 import com.weborganic.smith.PasswordRule;
 import com.weborganic.smith.ScoreFunction;
+import com.weborganic.smith.Scriptable;
 import com.weborganic.smith.function.ScoreArray;
 
 /**
@@ -11,10 +13,10 @@ import com.weborganic.smith.function.ScoreArray;
  * @author Christophe Lauret
  * @version 9 February 2012
  */
-public final class SpecialCharCountRule implements PasswordRule {
+public final class SpecialCharCountRule implements PasswordRule, Scriptable {
 
   /**
-   *
+   * The default special characters
    */
   public static final String DEFAULT_CHARS = "!@#$%^&*?_~";
 
@@ -65,4 +67,18 @@ public final class SpecialCharCountRule implements PasswordRule {
     this._function = ScoreArray.parse(config);
   }
 
+  @Override
+  public Appendable toScript(Appendable script) throws IOException {
+    script.append("function (p) {");
+    script.append(" var f = ");
+    this._function.toScript(script).append(";");
+    StringBuilder regexp = new StringBuilder();
+    for (int i=0; i < this._chars.length(); i++) {
+      regexp.append('\\').append(this._chars.charAt(i));
+    }
+    script.append(" var s = p.length - p.replace(/"+regexp+"/g, '').length;");
+    script.append(" return f(s);");
+    script.append("}");
+    return script;
+  }
 }

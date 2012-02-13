@@ -1,15 +1,16 @@
 package com.weborganic.smith;
 
 /**
- * A score
+ * A function to apply to a result in order to produce the score.
  *
  * @author Christophe Lauret
- * @version
+ * @version 14 February 2012
  */
-public interface ScoreFunction {
+public interface ScoreFunction extends Scriptable {
 
   /**
-   * Returns the
+   * Returns the type for this function.
+   *
    * @return
    */
   String type();

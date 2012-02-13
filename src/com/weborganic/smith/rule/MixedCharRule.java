@@ -1,18 +1,20 @@
 package com.weborganic.smith.rule;
 
+import java.io.IOException;
 import java.util.Map;
 
 import com.weborganic.smith.PasswordRule;
 import com.weborganic.smith.ScoreFunction;
+import com.weborganic.smith.Scriptable;
 import com.weborganic.smith.function.ScoreArray;
 
 /**
  * Evaluate a password based the number of mixed character.
  *
  * @author Christophe Lauret
- * @version 9 February 2012
+ * @version 14 February 2012
  */
-public class MixedCharRule implements PasswordRule {
+public class MixedCharRule implements PasswordRule, Scriptable {
 
   /**
    * The array of scores.
@@ -38,6 +40,17 @@ public class MixedCharRule implements PasswordRule {
   @Override
   public void configure(Map<String, String> config) {
     this._function = ScoreArray.parse(config);
+  }
+
+  @Override
+  public Appendable toScript(Appendable script) throws IOException {
+    script.append("function (p) {");
+    script.append(" var f = ");
+    this._function.toScript(script).append(";");
+    script.append(" var r = (/[a-zA-Z]/.test(p)? 1 : 0) + (/[0-9]/.test(p)? 1 : 0) + (/[^a-zA-Z0-9]/.test(p)? 1 : 0);");
+    script.append(" return f(r);");
+    script.append("}");
+    return script;
   }
 
 }
