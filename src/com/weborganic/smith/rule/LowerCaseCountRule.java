@@ -45,8 +45,8 @@ public class LowerCaseCountRule implements PasswordRule, Scriptable {
     out.print("  var f = ");
     ((Scriptable)this._function).toScript(out);
     out.println(";");
-    out.println("  var c = p.length - p.replace(/[a-z]/g, '').length;");
-    out.println("  return f(c);");
+    out.println("  var s = p.length - p.replace(/[a-z]/g, '').length;");
+    out.println("  return f(s);");
     out.print("}");
   }
 }

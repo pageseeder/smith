@@ -137,7 +137,7 @@ public class BannedPasswordRule implements PasswordRule, Scriptable {
       if (words.hasNext()) out.print(',');
     }
     out.print("];");
-    out.println("  return b.indexOf(p) !== -1? "+this.forBanned+" : "+this.forAllowed+";");
+    out.println(" return b.indexOf(p) !== -1? "+this.forBanned+" : "+this.forAllowed+";");
     out.print("}");
   }
 }

@@ -1,9 +1,11 @@
 package com.weborganic.smith.rule;
 
+import java.io.PrintWriter;
 import java.util.Map;
 
 import com.weborganic.smith.PasswordRule;
 import com.weborganic.smith.ScoreFunction;
+import com.weborganic.smith.Scriptable;
 import com.weborganic.smith.function.ScoreArray;
 
 /**
@@ -12,7 +14,7 @@ import com.weborganic.smith.function.ScoreArray;
  * @author Christophe Lauret
  * @version 9 February 2012
  */
-public class MixedCaseRule implements PasswordRule {
+public class MixedCaseRule implements PasswordRule, Scriptable {
 
   /**
    * The array of scores.
@@ -37,6 +39,19 @@ public class MixedCaseRule implements PasswordRule {
   @Override
   public void configure(Map<String, String> config) {
     this._function = ScoreArray.parse(config);
+  }
+
+  @Override
+  public void toScript(PrintWriter out) {
+    if (!(this._function instanceof Scriptable)) return;
+    out.println("function (p) {");
+    out.print("  var f = ");
+    ((Scriptable)this._function).toScript(out);
+    out.println(";");
+    out.println("  var l = p.length - p.replace(/[a-z]/g, '').length;");
+    out.println("  var u = p.length - p.replace(/[A-Z]/g, '').length;");
+    out.println("  return f(Math.min(l,u));");
+    out.print("}");
   }
 
 }

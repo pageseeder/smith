@@ -45,8 +45,8 @@ public class DigitCountRule implements PasswordRule, Scriptable {
     out.print("  var f = ");
     ((Scriptable)this._function).toScript(out);
     out.println(";");
-    out.println("  var c = p.length - p.replace(/[0-9]/g, '').length;");
-    out.println("  return f(c);");
+    out.println("  var n = p.length - p.replace(/[0-9]/g, '').length;");
+    out.println("  return f(n);");
     out.print("}");
   }
 }
