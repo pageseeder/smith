@@ -97,7 +97,7 @@ public class PasswordConfig {
 
         ClassLoader loader = PasswordConfig.class.getClassLoader();
         try {
-          InputStream in = loader.getResourceAsStream("com/weborganic/bramah/config.xml");
+          InputStream in = loader.getResourceAsStream("com/weborganic/smith/config.xml");
           InputSource source = new InputSource(in);
           defaultConfig = load(source);
         } catch (Exception ex) {

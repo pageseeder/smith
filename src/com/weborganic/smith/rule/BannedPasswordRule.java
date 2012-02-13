@@ -5,12 +5,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import com.weborganic.smith.PasswordRule;
+import com.weborganic.smith.Scriptable;
 
 /**
  * Evaluate a password by checking against a list of banned passwords.
@@ -18,7 +21,7 @@ import com.weborganic.smith.PasswordRule;
  * @author Christophe Lauret
  * @version 9 February 2012
  */
-public class BannedPasswordRule implements PasswordRule {
+public class BannedPasswordRule implements PasswordRule, Scriptable {
 
   /**
    * The set of banned passwords.
@@ -80,7 +83,7 @@ public class BannedPasswordRule implements PasswordRule {
     InputStream in = null;
     Set<String> banned = new HashSet<String>();
     try {
-      in = loader.getResourceAsStream("com/weborganic/bramah/rule/banned.txt");
+      in = loader.getResourceAsStream("com/weborganic/smith/rule/banned.txt");
       InputStreamReader r = new InputStreamReader(in);
       banned = load(r);
     } catch (IOException ex) {
@@ -122,4 +125,19 @@ public class BannedPasswordRule implements PasswordRule {
     return banned;
   }
 
+  @Override
+  public void toScript(PrintWriter out) {
+    out.println("function (p) {");
+    // Store array
+    out.print("  var b = [");
+    for (Iterator<String> words = this._banned.iterator(); words.hasNext(); ) {
+      String word = words.next();
+      // TODO escape if contains single quote
+      out.print("'"+word+"'");
+      if (words.hasNext()) out.print(',');
+    }
+    out.print("];");
+    out.println("  return b.indexOf(p) !== -1? "+this.forBanned+" : "+this.forAllowed+";");
+    out.print("}");
+  }
 }

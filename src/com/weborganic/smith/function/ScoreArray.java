@@ -1,5 +1,6 @@
 package com.weborganic.smith.function;
 
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -7,6 +8,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.weborganic.smith.ScoreFunction;
+import com.weborganic.smith.Scriptable;
 
 /**
  * A utility class for scores
@@ -14,7 +16,7 @@ import com.weborganic.smith.ScoreFunction;
  * @author Christophe Lauret
  * @version 9 February 2012
  */
-public final class ScoreArray extends ScoreFunctionBase implements ScoreFunction {
+public final class ScoreArray extends ScoreFunctionBase implements ScoreFunction, Scriptable {
 
   /**
    * The maximum size of the array.
@@ -112,6 +114,23 @@ public final class ScoreArray extends ScoreFunctionBase implements ScoreFunction
       }
     }
     return Integer.valueOf(s);
+  }
+
+  @Override
+  public void toScript(PrintWriter out){
+    out.print("function (i) {");
+    // Store array
+    out.print("  var x = [");
+    for (int i = 0; i < this._scores.length; i++) {
+      if (i > 0) out.print(',');
+      out.print(this._scores[i]);
+    }
+    out.print("];");
+    // Do function
+    out.print(" if (i < 0 || x.length === 0) return 0;");
+    out.print(" if (i < x.length) return x[i];");
+    out.print(" return x[x.length -1];");
+    out.print("}");
   }
 
   public static void main(String[] args) {

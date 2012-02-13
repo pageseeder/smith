@@ -1,5 +1,7 @@
 package com.weborganic.smith;
 
+import java.io.PrintWriter;
+
 
 /**
  * The main class
@@ -89,6 +91,15 @@ public final class PasswordMeter {
     System.out.println(password+" -> "+level+" ("+score+")");
     for (PasswordRule rule : meter.configuration().rules()) {
       System.out.println(rule.getClass().getSimpleName()+"="+rule.score(password));
+    }
+
+    PrintWriter script = new PrintWriter(System.err);
+    for (PasswordRule rule : meter.configuration().rules()) {
+      if (rule instanceof Scriptable) {
+        System.err.println(rule.toString());
+        ((Scriptable)rule).toScript(script);
+      }
+      script.flush();
     }
 
   }
