@@ -45,7 +45,10 @@ public final class PasswordMeter implements Scriptable {
   }
 
   /**
+   * Returns the vector of scores for each rule in the order in which they are defined.
    *
+   * @param password the password to evaluate
+   * @return the corresponding scores for each rule.
    */
   public int[] vector(String password) {
     int[] vector = new int[this._config.rules().size()];
@@ -68,6 +71,24 @@ public final class PasswordMeter implements Scriptable {
       score += s;
     }
     return score;
+  }
+
+  /**
+   * Indicates whether the specified password matches at least the supplied level.
+   *
+   * @param password The password to evaluate.
+   * @param level    The level that must be matched.
+   *
+   * @return <code>true</code> if the score is sufficient  to match at least this level;
+   *         <code>false</code> otherwise.
+   *
+   * @throws IllegalArgumentException If the level is not defined in the config.
+   * @throws NullPointerException     If the level is <code>null</code>.
+   */
+  public boolean isAtLeast(String password, String level) {
+    int threshold = this._config.getThreshold(level);
+    int score = score(password);
+    return score > threshold;
   }
 
   /**
@@ -106,16 +127,16 @@ public final class PasswordMeter implements Scriptable {
    */
   public static void main(String[] args) throws IOException {
     PasswordMeter meter = new PasswordMeter();
-    String password = "";
+    if (args.length == 0) {
+      System.err.println("PasswordMeter [password]");
+    }
+    String password = args[0];
     int score = meter.score(password);
     String level = meter.configuration().getLevel(score);
     System.out.println(password+" -> "+level+" ("+score+")");
     for (PasswordRule rule : meter.configuration().rules()) {
       System.out.println(rule.getClass().getSimpleName()+"="+rule.score(password));
     }
-
-    // Generate the JavaScript
-    meter.toScript(System.err);
 
   }
 

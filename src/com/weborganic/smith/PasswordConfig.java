@@ -78,12 +78,53 @@ public class PasswordConfig {
   }
 
   /**
+   * Returns the minimum score required to match this level.
+   *
+   * @param level the level
+   * @return the corresponding threshold.
+   *
+   * @throws IllegalArgumentException If the level is undefined.
+   * @throws NullPointerException     If the level is <code>null</code>.
+   */
+  public int getThreshold(String level) {
+    if (level == null) throw new NullPointerException("Level cannot be null");
+    int i = getLevelIndex(level);
+    if (i >= 0) {
+      return this._thresholds[i];
+    } else throw new IllegalArgumentException("Undefined level '"+level+"'");
+  }
+
+  /**
+   * Indicates whether a level is defined in the specified configuration.
+   *
+   * @param level the level
+   * @return <code>true</code> if the level is defined in this configuration; <code>false</code> otherwise.
+   */
+  public boolean isDefined(String level) {
+    return getLevelIndex(level) != -1;
+  }
+
+  /**
    * Returns the rules in this configuration
    *
    * @return the rules in this configuration.
    */
   public List<PasswordRule> rules() {
     return this._rules;
+  }
+
+  /**
+   * Returns the index of the specified level in the array.
+   *
+   * @param level the level
+   * @return the index of the level or -1 if undefined.
+   */
+  private int getLevelIndex(String level) {
+    if (level == null) return -1;
+    for (int i = 0; i < this._levels.length; i++) {
+      if (this._levels[i].equals(level)) return i;
+    }
+    return -1;
   }
 
   // Static helpers
@@ -94,16 +135,14 @@ public class PasswordConfig {
    */
   public static PasswordConfig defaultConfig() {
     if (defaultConfig == null) {
-
-        ClassLoader loader = PasswordConfig.class.getClassLoader();
-        try {
-          InputStream in = loader.getResourceAsStream("com/weborganic/smith/config.xml");
-          InputSource source = new InputSource(in);
-          defaultConfig = load(source);
-        } catch (Exception ex) {
-          ex.printStackTrace();
-        }
-
+      ClassLoader loader = PasswordConfig.class.getClassLoader();
+      try {
+        InputStream in = loader.getResourceAsStream("com/weborganic/smith/config.xml");
+        InputSource source = new InputSource(in);
+        defaultConfig = load(source);
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
     }
     return defaultConfig;
   }
