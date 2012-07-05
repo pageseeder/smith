@@ -58,6 +58,8 @@ public class BannedPasswordRule implements PasswordRule, Scriptable {
       } catch (IOException ex) {
         throw new IllegalArgumentException(ex);
       }
+    } else {
+      load();
     }
     // Retrieve a list if one is specified
     String list = config.get("list");
@@ -126,6 +128,7 @@ public class BannedPasswordRule implements PasswordRule, Scriptable {
 
   @Override
   public Appendable toScript(Appendable script) throws IOException {
+    if (this._banned == null) this._banned = load();
     script.append("function (p) {");
     // Store array
     script.append(" var b = [");
