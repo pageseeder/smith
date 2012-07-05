@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +103,15 @@ public class PasswordConfig {
    */
   public boolean isDefined(String level) {
     return getLevelIndex(level) != -1;
+  }
+
+  /**
+   * Returns the list of levels in order of threshold.
+   *
+   * @return the list of levels in order of threshold.
+   */
+  public List<String> levels() {
+    return Arrays.asList(this._levels);
   }
 
   /**

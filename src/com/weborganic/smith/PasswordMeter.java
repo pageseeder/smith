@@ -1,6 +1,7 @@
 package com.weborganic.smith;
 
 import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -105,18 +106,41 @@ public final class PasswordMeter implements Scriptable {
     script.append("var SMITH = {};");
     script.append("(function () {");
     // Score function
-    script.append(" var score = function score(password) {");
+    script.append(" var score = function score(p) {");
     script.append(" var rules = [];");
     for (PasswordRule rule : this._config.rules()) {
       script.append(" rules.push(");
       rule.toScript(script).append(");\n");
     }
     script.append(" var s = 0;");
-    script.append(" for (var i=0; i < rules.length; i++) { s += rules[i](password); }");
+    script.append(" for (var i=0; i < rules.length; i++) { s += rules[i](p); }");
     script.append(" return s;");
     script.append(" };");
+    // Level function
+    script.append(" var level = function level(s) {");
+    List<String> levels = this._config.levels();
+    for (int i = levels.size() - 1; i >= 0; i--) {
+      String level = levels.get(i);
+      if (i > 0) {
+        int threshold = this._config.getThreshold(level);
+        script.append(" if (s >= ").append(Integer.toString(threshold)).append(") { return '").append(level).append("';}");
+      } else {
+        script.append(" return '").append(level).append("';");
+      }
+    }
+    script.append(" };");
+    // Get Strength
+    script.append(" var get = function get(p) {");
+    script.append(" var s = score(p);");
+    script.append(" var l = level(s);");
+    script.append(" return {score: s, level: l};");
+    script.append(" };");
     // Export
-    script.append("  SMITH.score = score;");
+    script.append(" SMITH.score = score;");
+    script.append(" SMITH.level = level;");
+    script.append(" SMITH.get = get;");
+    String version = Package.getPackage("com.weborganic.smith").getImplementationVersion();
+    script.append(" SMITH.version = '").append(version != null? version : "unspecified").append("';");
     script.append("})();");
     return script;
   }
@@ -130,14 +154,17 @@ public final class PasswordMeter implements Scriptable {
     if (args.length == 0) {
       System.err.println("PasswordMeter [password]");
     }
-    String password = args[0];
-    int score = meter.score(password);
-    String level = meter.configuration().getLevel(score);
-    System.out.println(password+" -> "+level+" ("+score+")");
-    for (PasswordRule rule : meter.configuration().rules()) {
-      System.out.println(rule.getClass().getSimpleName()+"="+rule.score(password));
+    if (args.length > 0) {
+      String password = args[0];
+      int score = meter.score(password);
+      String level = meter.configuration().getLevel(score);
+      System.out.println(password+" -> "+level+" ("+score+")");
+      for (PasswordRule rule : meter.configuration().rules()) {
+        System.out.println(rule.getClass().getSimpleName()+"="+rule.score(password));
+      }
+    } else {
+      meter.toScript(System.out);
     }
-
   }
 
 }
