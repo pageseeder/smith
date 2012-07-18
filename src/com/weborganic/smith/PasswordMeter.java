@@ -89,7 +89,7 @@ public final class PasswordMeter implements Scriptable {
   public boolean isAtLeast(String password, String level) {
     int threshold = this._config.getThreshold(level);
     int score = score(password);
-    return score > threshold;
+    return score >= threshold;
   }
 
   /**
