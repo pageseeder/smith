@@ -134,12 +134,14 @@ public class BannedPasswordRule implements PasswordRule, Scriptable {
     script.append(" var b = [");
     for (Iterator<String> words = this._banned.iterator(); words.hasNext(); ) {
       String word = words.next();
-      // TODO escape if contains single quote
-      script.append("'"+word+"'");
+      script.append("'"+word.replaceAll("'", "\\'")+"'");
       if (words.hasNext()) script.append(',');
     }
     script.append("];");
-    script.append(" return b.indexOf(p) !== -1? "+this.forBanned+" : "+this.forAllowed+";");
+    script.append(" for (var i = 0; i < b.length; i++) {");
+    script.append("   if (b[i] === p) { return "+this.forBanned+"; }");
+    script.append(" }");
+    script.append("return "+this.forAllowed+";");
     script.append("}");
     return script;
   }
