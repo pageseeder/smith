@@ -1,4 +1,19 @@
-package com.weborganic.smith.rule;
+/*
+ * Copyright 2010-2015 Allette Systems (Australia)
+ * http://www.allette.com.au
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.pageseeder.smith.rule;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,8 +26,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.weborganic.smith.PasswordRule;
-import com.weborganic.smith.Scriptable;
+import org.pageseeder.smith.PasswordRule;
+import org.pageseeder.smith.Scriptable;
 
 /**
  * Evaluate a password by checking against a list of banned passwords.
@@ -39,12 +54,11 @@ public class BannedPasswordRule implements PasswordRule, Scriptable {
 
   @Override
   public int score(String password) {
-    if (this._banned == null) this._banned = load();
-    if (this._banned.contains(password)) {
-      return this.forBanned;
-    } else {
-      return this.forAllowed;
+    if (this._banned == null) {
+      this._banned = load();
     }
+    if (this._banned.contains(password)) return this.forBanned;
+    else return this.forAllowed;
   }
 
   @Override
@@ -65,7 +79,9 @@ public class BannedPasswordRule implements PasswordRule, Scriptable {
     String list = config.get("list");
     if (list != null) {
       String[] words = list.split(",");
-      if (banned == null) banned = new HashSet<String>();
+      if (banned == null) {
+        banned = new HashSet<String>();
+      }
       for (String word : words) {
         banned.add(word);
       }
@@ -91,7 +107,9 @@ public class BannedPasswordRule implements PasswordRule, Scriptable {
       throw new IllegalStateException(ex);
     } finally {
       try {
-        if (in != null) in.close();
+        if (in != null) {
+          in.close();
+        }
       } catch (IOException ex) {
         ex.printStackTrace();
       }
@@ -118,7 +136,9 @@ public class BannedPasswordRule implements PasswordRule, Scriptable {
       throw new IllegalStateException(ex);
     } finally {
       try {
-        if (buffered != null) buffered.close();
+        if (buffered != null) {
+          buffered.close();
+        }
       } catch (IOException ex) {
         ex.printStackTrace();
       }
@@ -128,14 +148,18 @@ public class BannedPasswordRule implements PasswordRule, Scriptable {
 
   @Override
   public Appendable toScript(Appendable script) throws IOException {
-    if (this._banned == null) this._banned = load();
+    if (this._banned == null) {
+      this._banned = load();
+    }
     script.append("function (p) {");
     // Store array
     script.append(" var b = [");
     for (Iterator<String> words = this._banned.iterator(); words.hasNext(); ) {
       String word = words.next();
       script.append("'"+word.replaceAll("'", "\\'")+"'");
-      if (words.hasNext()) script.append(',');
+      if (words.hasNext()) {
+        script.append(',');
+      }
     }
     script.append("];");
     script.append(" for (var i = 0; i < b.length; i++) {");

@@ -1,4 +1,19 @@
-package com.weborganic.smith.function;
+/*
+ * Copyright 2010-2015 Allette Systems (Australia)
+ * http://www.allette.com.au
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.pageseeder.smith.function;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -7,8 +22,8 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.weborganic.smith.ScoreFunction;
-import com.weborganic.smith.Scriptable;
+import org.pageseeder.smith.ScoreFunction;
+import org.pageseeder.smith.Scriptable;
 
 /**
  * A utility class for scores
@@ -62,7 +77,9 @@ public final class ScoreArray extends ScoreFunctionBase implements ScoreFunction
     StringBuilder out = new StringBuilder();
     out.append('[');
     for (int i = 0; i < this._scores.length; i++) {
-      if (i > 0) out.append(',');
+      if (i > 0) {
+        out.append(',');
+      }
       out.append(this._scores[i]);
     }
     out.append(']');
@@ -122,7 +139,9 @@ public final class ScoreArray extends ScoreFunctionBase implements ScoreFunction
     // Store array
     script.append(" var x = [");
     for (int i = 0; i < this._scores.length; i++) {
-      if (i > 0) script.append(',');
+      if (i > 0) {
+        script.append(',');
+      }
       script.append(Integer.toString(this._scores[i]));
     }
     script.append("];");
