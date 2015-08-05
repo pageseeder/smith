@@ -154,7 +154,7 @@ public final class PasswordMeter implements Scriptable {
     script.append(" SMITH.score = score;");
     script.append(" SMITH.level = level;");
     script.append(" SMITH.get = get;");
-    String version = Package.getPackage("com.weborganic.smith").getImplementationVersion();
+    String version = Package.getPackage("org.pageseeder.smith").getImplementationVersion();
     script.append(" SMITH.version = '").append(version != null? version : "unspecified").append("';");
     script.append("})();");
     return script;

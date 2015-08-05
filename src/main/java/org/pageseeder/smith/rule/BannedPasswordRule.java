@@ -100,7 +100,7 @@ public class BannedPasswordRule implements PasswordRule, Scriptable {
     InputStream in = null;
     Set<String> banned = new HashSet<String>();
     try {
-      in = loader.getResourceAsStream("com/weborganic/smith/rule/banned.txt");
+      in = loader.getResourceAsStream("org/pageseeder/smith/rule/banned.txt");
       InputStreamReader r = new InputStreamReader(in);
       banned = load(r);
     } catch (IOException ex) {

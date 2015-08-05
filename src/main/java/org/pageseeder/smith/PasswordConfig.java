@@ -163,7 +163,7 @@ public class PasswordConfig {
     if (defaultConfig == null) {
       ClassLoader loader = PasswordConfig.class.getClassLoader();
       try {
-        InputStream in = loader.getResourceAsStream("com/weborganic/smith/config.xml");
+        InputStream in = loader.getResourceAsStream("org/pageseeder/smith/config.xml");
         InputSource source = new InputSource(in);
         defaultConfig = load(source);
       } catch (Exception ex) {
@@ -246,7 +246,7 @@ public class PasswordConfig {
       } else if ("rule".equals(element)) {
         String className = atts.getValue("class");
         if (className.indexOf('.') < 0) {
-          className = "com.weborganic.smith.rule."+className;
+          className = "org.pageseeder.smith.rule."+className;
         }
         try {
           Class<?> c = Class.forName(className);
