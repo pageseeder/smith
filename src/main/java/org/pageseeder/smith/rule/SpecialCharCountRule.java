@@ -47,8 +47,6 @@ public final class SpecialCharCountRule implements PasswordRule, Scriptable {
 
   /**
    * Creates a new rule using the special characters
-   *
-   * @param chars
    */
   public SpecialCharCountRule() {
     this._chars = DEFAULT_CHARS;
@@ -56,7 +54,7 @@ public final class SpecialCharCountRule implements PasswordRule, Scriptable {
 
   /**
    *
-   * @param chars
+   * @param chars The characters to look for
    */
   public SpecialCharCountRule(String chars) {
     this._chars = chars;

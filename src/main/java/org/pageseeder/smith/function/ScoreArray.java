@@ -88,8 +88,8 @@ public final class ScoreArray extends ScoreFunctionBase implements ScoreFunction
 
   /**
    *
-   * @param config
-   * @return
+   * @param config the configuration
+   * @return the corresponding array
    */
   public static ScoreArray parse(Map<String, String> config) {
     // Grab the sorted the values
@@ -118,11 +118,6 @@ public final class ScoreArray extends ScoreFunctionBase implements ScoreFunction
     return new ScoreArray(scores);
   }
 
-  /**
-   *
-   * @param s
-   * @return
-   */
   private static Integer asInteger(String s) {
     for (int i = 0; i < s.length(); i++) {
       char c = s.charAt(i);

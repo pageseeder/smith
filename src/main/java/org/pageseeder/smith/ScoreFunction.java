@@ -26,7 +26,7 @@ public interface ScoreFunction extends Scriptable {
   /**
    * Returns the type for this function.
    *
-   * @return
+   * @return the type for this function.
    */
   String type();
 
