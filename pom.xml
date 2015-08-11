@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.pageseeder.smith</groupId>
   <artifactId>pso-smith</artifactId>
-  <version>0.7.0</version>
+  <version>0.7.1-SNAPSHOT</version>
 
   <licenses>
     <license>
@@ -24,7 +24,6 @@
     <connection>scm:git:git@github.com:pageseeder/smith.git</connection>
     <developerConnection>scm:git:git@github.com:pageseeder/smith.git</developerConnection>
     <url>git@github.com:pageseeder/smith.git</url>
-    <tag>v0.7.0</tag>
   </scm>
 
   <organization>
