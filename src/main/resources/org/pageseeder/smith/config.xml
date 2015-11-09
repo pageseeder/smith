@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<password-config version="1-0">
+  <rules>
+    <!-- Points based on length -->
+    <rule class="LengthRule">
+      <property name="0"  value="-100"/>
+      <property name="1"  value="-20"/>
+      <property name="2"  value="-10"/>
+      <property name="3"  value="-5"/>
+      <property name="4"  value="3"/>
+      <property name="5"  value="6"/>
+      <property name="6"  value="8"/>
+      <property name="7"  value="10"/>
+      <property name="8"  value="12"/>
+      <property name="9"  value="14"/>
+      <property name="10" value="16"/>
+      <property name="11" value="18"/>
+      <property name="12" value="20"/>
+      <property name="13" value="24"/>
+      <property name="14" value="28"/>
+      <property name="15" value="32"/>
+      <property name="16" value="36"/>
+    </rule>
+    <!-- Points based on the number of digits -->
+    <rule class="DigitCountRule">
+      <property name="1" value="5"/>
+      <property name="2" value="7"/>
+      <property name="3" value="10"/>
+    </rule>
+    <!-- Points based on the number of special characters -->
+    <rule class="SpecialCharCountRule">
+      <property name="1" value="5"/>
+      <property name="2" value="10"/>
+    </rule>
+    <!-- Points based on the use of mixed case characters -->
+    <rule class="MixedCaseRule">
+      <property name="1" value="2"/>
+      <property name="2" value="3"/>
+    </rule>
+    <rule class="MixedCharRule">
+      <property name="2" value="1"/>
+      <property name="3" value="2"/>
+    </rule>
+    <rule class="RepeatedCharRule">
+      <property name="4" value="-1"/>
+      <property name="5" value="-2"/>
+      <property name="6" value="-3"/>
+    </rule>
+    <rule class="ConsecutiveCharRule">
+      <property name="2" value="-2"/>
+      <property name="3" value="-4"/>
+      <property name="4" value="-6"/>
+      <property name="5" value="-8"/>
+      <property name="6" value="-10"/>
+    </rule>
+    <!-- Banned password rule -->
+    <rule class="BannedPasswordRule">
+      <property name="file" value="#default"/>
+      <property name="0" value="-100"/>
+      <property name="1" value="0"/>
+    </rule>
+  </rules>
+  <!-- Defines the thresholds for each level -->
+  <levels default="VERY_WEAK">
+    <level name="WEAK"        threshold="16"/>
+    <level name="MEDIOCRE"    threshold="25"/>
+    <level name="STRONG"      threshold="35"/>
+    <level name="VERY_STRONG" threshold="45"/>
+  </levels>
+</password-config>
