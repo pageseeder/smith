@@ -24,9 +24,13 @@ import org.pageseeder.smith.Scriptable;
  * Returns the score linearly based on the given value.
  *
  * @author Christophe Lauret
- * @version 14 February 2012
  */
 public class LinearScore implements ScoreFunction, Scriptable {
+
+  /**
+   * Linear scoring implementing an identity function.
+   */
+  public static final LinearScore IDENTITY = new LinearScore();
 
   /**
    * A factor to apply to the score.
@@ -47,6 +51,13 @@ public class LinearScore implements ScoreFunction, Scriptable {
    */
   public LinearScore(int factor) {
     this._factor = factor;
+  }
+
+  /**
+   * @return the factor applied to the score.
+   */
+  public int factor() {
+    return this._factor;
   }
 
   /**

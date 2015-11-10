@@ -32,8 +32,16 @@ import org.pageseeder.smith.Scriptable;
 /**
  * Evaluate a password by checking against a list of banned passwords.
  *
+ * The default scoring is as follows:
+ * <ul>
+ *   <li>0 for <code>null</code> or empty string <code>""</code></li>
+ *   <li>0 for <code>null</code> or empty string <code>""</code></li>
+ *   <li>-100 for any banned password</li>
+ * </ul>
+ *
+ * <p>The score for banned and allowed passwords can be customized.
+ *
  * @author Christophe Lauret
- * @version 14 February 2012
  */
 public class BannedPasswordRule implements PasswordRule, Scriptable {
 

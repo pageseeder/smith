@@ -21,20 +21,32 @@ import java.util.Map;
 import org.pageseeder.smith.PasswordRule;
 import org.pageseeder.smith.ScoreFunction;
 import org.pageseeder.smith.Scriptable;
+import org.pageseeder.smith.function.LinearScore;
 import org.pageseeder.smith.function.ScoreArray;
 
 /**
  * Evaluate a password based the number of mixed case pairs.
  *
+ * <p>This rule counts the number of lower case letters and the
+ * number of upper case letters and returns the minimum value.
+ *
+ * <p>The scoring is as follows:
+ * <ul>
+ *   <li>0 for <code>null</code> or empty string <code>""</code></li>
+ *   <li>1 point per pair of lower/upper case letters found</li>
+ * </ul>
+ *
+ * <p>The maximum value is half the password length if the password
+ * is made up of half upper letters and half lower case letters
+ *
  * @author Christophe Lauret
- * @version 14 February 2012
  */
-public class MixedCaseRule implements PasswordRule, Scriptable {
+public final class MixedCaseRule implements PasswordRule, Scriptable {
 
   /**
    * The array of scores.
    */
-  private ScoreFunction _function;
+  private ScoreFunction _function = LinearScore.IDENTITY;
 
   @Override
   public int score(String password) {
@@ -64,8 +76,8 @@ public class MixedCaseRule implements PasswordRule, Scriptable {
     script.append("function (p) {");
     script.append(" var f = ");
     this._function.toScript(script).append(";");
-    script.append(" var l = p.length - p.replace(/[a-z]/g, '').length;");
-    script.append(" var u = p.length - p.replace(/[A-Z]/g, '').length;");
+    script.append(" var l = p? p.length - p.replace(/[a-z]/g, '').length : 0;");
+    script.append(" var u = p? p.length - p.replace(/[A-Z]/g, '').length : 0;");
     script.append(" return f(Math.min(l,u));");
     script.append("}");
     return script;

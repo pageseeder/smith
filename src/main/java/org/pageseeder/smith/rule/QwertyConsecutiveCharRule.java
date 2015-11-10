@@ -21,6 +21,7 @@ import java.util.Map;
 import org.pageseeder.smith.PasswordRule;
 import org.pageseeder.smith.ScoreFunction;
 import org.pageseeder.smith.Scriptable;
+import org.pageseeder.smith.function.LinearScore;
 import org.pageseeder.smith.function.ScoreArray;
 
 /**
@@ -39,14 +40,14 @@ public class QwertyConsecutiveCharRule implements PasswordRule, Scriptable {
   /**
    * The array of scores.
    */
-  private ScoreFunction _function;
+  private ScoreFunction _function = LinearScore.IDENTITY;
 
   @Override
   public int score(String password) {
     if (password == null) return 0;
     int count = 0;
     for (String sequence : QUERTY_SEQUENCES) {
-      if (password.indexOf(sequence) >= 0) {
+      if (sequence.indexOf(password) >= 0) {
         count = password.length();
       }
     }
@@ -76,7 +77,7 @@ public class QwertyConsecutiveCharRule implements PasswordRule, Scriptable {
     script.append("];");
     script.append(" var n = 0;");
     script.append(" for (var i = 0; i < q.length; i++) {");
-    script.append(" if (q[i].indexOf(p) > 0) { n = p.length; }");
+    script.append(" if (q[i].indexOf(p) >= 0) { n = p.length; }");
     script.append(" }");
     script.append(" return f(n);");
     script.append("}");

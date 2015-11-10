@@ -21,7 +21,6 @@ import org.pageseeder.smith.ScoreFunction;
  * Provides a score function.
  *
  * @author Christophe Lauret
- * @version 9 February 2012
  */
 public abstract class ScoreFunctionBase implements ScoreFunction {
 

@@ -21,20 +21,29 @@ import java.util.Map;
 import org.pageseeder.smith.PasswordRule;
 import org.pageseeder.smith.ScoreFunction;
 import org.pageseeder.smith.Scriptable;
+import org.pageseeder.smith.function.LinearScore;
 import org.pageseeder.smith.function.ScoreArray;
 
 /**
  * A rule based on the number of digits [0-9] in the password.
  *
+ * The scoring is as follows:
+ * <ul>
+ *   <li>0 for <code>null</code> or empty string <code>""</code></li>
+ *   <li>1 point for every digit found in the password</li>
+ * </ul>
+ *
+ * <p>The maximum value if the length of the password if it is entirely
+ * made up of digits.
+ *
  * @author Christophe Lauret
- * @version 14 February 2012
  */
-public class DigitCountRule implements PasswordRule, Scriptable {
+public final class DigitCountRule implements PasswordRule, Scriptable {
 
   /**
    * The array of scores.
    */
-  private ScoreFunction _function;
+  private ScoreFunction _function = LinearScore.IDENTITY;
 
   @Override
   public int score(String password) {
@@ -58,7 +67,7 @@ public class DigitCountRule implements PasswordRule, Scriptable {
     script.append("function (p) {");
     script.append(" var f = ");
     this._function.toScript(script).append(";");
-    script.append(" var n = p.length - p.replace(/[0-9]/g, '').length;");
+    script.append(" var n = p && (p.length - p.replace(/[0-9]/g, '').length) || 0;");
     script.append(" return f(n);");
     script.append("}");
     return script;

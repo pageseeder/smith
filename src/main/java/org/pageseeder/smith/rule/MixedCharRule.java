@@ -21,38 +21,50 @@ import java.util.Map;
 import org.pageseeder.smith.PasswordRule;
 import org.pageseeder.smith.ScoreFunction;
 import org.pageseeder.smith.Scriptable;
+import org.pageseeder.smith.function.LinearScore;
 import org.pageseeder.smith.function.ScoreArray;
 
 /**
- * Evaluate a password based the number of mixed character.
+ * Evaluate a password based the number of mixed characters.
+ *
+ * <p>This rule considers three kind of characters, ASCII letters
+ * <code>[a-zA-Z]</code>, digits <code>[0-9]</code> and any other
+ * characters.
+ *
+ * <p>The scoring is as follows:
+ * <ul>
+ *   <li>0 for <code>null</code> or empty string <code>""</code></li>
+ *   <li>1 point if the password is made up of one kind of characters</li>
+ *   <li>2 points if the password is made up of two kinds of characters</li>
+ *   <li>3 points if the password is made up of three kinds of characters</li>
+ * </ul>
  *
  * @author Christophe Lauret
- * @version 14 February 2012
  */
-public class MixedCharRule implements PasswordRule, Scriptable {
+public final class MixedCharRule implements PasswordRule, Scriptable {
 
   /**
    * The array of scores.
    */
-  private ScoreFunction _function;
+  private ScoreFunction _function = LinearScore.IDENTITY;
 
   @Override
   public int score(String password) {
     if (password == null) return 0;
     int letter = 0;
     int digit = 0;
-    int special = 0;
+    int other = 0;
     for (int i = 0; i < password.length(); i++) {
       char c = password.charAt(i);
       if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
         letter = 1;
-      } else if (c >= '0' && c <= '1') {
+      } else if (c >= '0' && c <= '9') {
         digit = 1;
       } else {
-        special = 1;
+        other = 1;
       }
     }
-    int mixed = letter + digit + special;
+    int mixed = letter + digit + other;
     return this._function.get(mixed);
   }
 
@@ -66,8 +78,8 @@ public class MixedCharRule implements PasswordRule, Scriptable {
     script.append("function (p) {");
     script.append(" var f = ");
     this._function.toScript(script).append(";");
-    script.append(" var r = (/[a-zA-Z]/.test(p)? 1 : 0) + (/[0-9]/.test(p)? 1 : 0) + (/[^a-zA-Z0-9]/.test(p)? 1 : 0);");
-    script.append(" return f(r);");
+    script.append(" var r = p && (/[a-zA-Z]/.test(p)? 1 : 0) + (/[0-9]/.test(p)? 1 : 0) + (/[^a-zA-Z0-9]/.test(p)? 1 : 0);");
+    script.append(" return p? f(r) : f(0);");
     script.append("}");
     return script;
   }

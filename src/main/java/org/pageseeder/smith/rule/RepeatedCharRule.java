@@ -21,20 +21,29 @@ import java.util.Map;
 import org.pageseeder.smith.PasswordRule;
 import org.pageseeder.smith.ScoreFunction;
 import org.pageseeder.smith.Scriptable;
+import org.pageseeder.smith.function.LinearScore;
 import org.pageseeder.smith.function.ScoreArray;
 
 /**
  * A rule based on the number of repeated characters in the password.
  *
+ * <p>The scoring is as follows:
+ * <ul>
+ *   <li>0 for <code>null</code> or empty string <code>""</code></li>
+ *   <li>1 point for repeated character in the password</li>
+ * </ul>
+ *
+ * <p>The maximum value is the length of the password minus 1 if the
+ * password only contains a single character repeated multiple times.
+ *
  * @author Christophe Lauret
- * @version 14 February 2012
  */
-public class RepeatedCharRule implements PasswordRule, Scriptable {
+public final class RepeatedCharRule implements PasswordRule, Scriptable {
 
   /**
    * The array of scores.
    */
-  private ScoreFunction _function;
+  private ScoreFunction _function = LinearScore.IDENTITY;
 
   @Override
   public int score(String password) {
@@ -64,9 +73,9 @@ public class RepeatedCharRule implements PasswordRule, Scriptable {
     this._function.toScript(script).append(";");
     script.append(" var n = 0;");
     script.append(" var u = '';");
-    script.append(" for (var i = 0; i < p.length; i++) {");
+    script.append(" if (p) {for (var i = 0; i < p.length; i++) {");
     script.append("  if (u.indexOf(p.charAt(i)) === -1) { u += p.charAt(i); } else { n++; }");
-    script.append(" }");
+    script.append(" }}");
     script.append(" return f(n);");
     script.append("}");
     return script;

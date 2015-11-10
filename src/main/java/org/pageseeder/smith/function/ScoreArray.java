@@ -16,7 +16,7 @@
 package org.pageseeder.smith.function;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
@@ -29,7 +29,6 @@ import org.pageseeder.smith.Scriptable;
  * A utility class for scores
  *
  * @author Christophe Lauret
- * @version 14 February 2012
  */
 public final class ScoreArray extends ScoreFunctionBase implements ScoreFunction, Scriptable {
 
@@ -70,6 +69,13 @@ public final class ScoreArray extends ScoreFunctionBase implements ScoreFunction
     if (i < 0 || this._scores.length == 0) return 0;
     if (i < this._scores.length) return this._scores[i];
     return this._scores[this._scores.length - 1];
+  }
+
+  /**
+   * @return a copy of the internal array.
+   */
+  protected int[] scores(){
+    return Arrays.copyOf(this._scores, this._scores.length);
   }
 
   @Override
@@ -118,6 +124,17 @@ public final class ScoreArray extends ScoreFunctionBase implements ScoreFunction
     return new ScoreArray(scores);
   }
 
+  /**
+   * Linear Range
+   */
+  protected static ScoreArray linearRange(int from, int to) {
+   int[] scores = new int[to+1];
+   for (int i = from, j = 0; i < to+1; i++, j++) {
+     scores[i] = j+1;
+   }
+   return new ScoreArray(scores);
+  }
+
   private static Integer asInteger(String s) {
     for (int i = 0; i < s.length(); i++) {
       char c = s.charAt(i);
@@ -146,25 +163,6 @@ public final class ScoreArray extends ScoreFunctionBase implements ScoreFunction
     script.append(" return x[x.length -1];");
     script.append("}");
     return script;
-  }
-
-  public static void main(String[] args) {
-    Map<String, String> test = new HashMap<String, String>();
-    test.put("xx", "yy");
-    /*
-    test.put("4", "50");
-    test.put("2", "10");
-    test.put("10", "100");
-    test.put("-14", "17"); */
-    ScoreArray x = parse(test);
-    System.out.println(x.toString());
-    System.out.println(x.get(-1));
-    System.out.println(x.get(0));
-    System.out.println(x.get(1));
-    System.out.println(x.get(2));
-    System.out.println(x.get(5));
-    System.out.println(x.get(10));
-    System.out.println(x.get(220));
   }
 
 }

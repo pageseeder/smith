@@ -21,20 +21,30 @@ import java.util.Map;
 import org.pageseeder.smith.PasswordRule;
 import org.pageseeder.smith.ScoreFunction;
 import org.pageseeder.smith.Scriptable;
+import org.pageseeder.smith.function.LinearScore;
 import org.pageseeder.smith.function.ScoreArray;
 
 /**
  * A rule based on the number of unique characters in the password.
  *
+ * The scoring is as follows:
+ * <ul>
+ *   <li>0 for <code>null</code> or empty string <code>""</code></li>
+ *   <li>1 point for every unique character in the password</li>
+ * </ul>
+ *
+ * <p>The maximum value if the length of the password if it is entirely
+ * made up of unique characters. In other words, it is the length of the
+ * password if no character is repeated.
+ *
  * @author Christophe Lauret
- * @version 14 February 2012
  */
-public class UniqueCharRule implements PasswordRule, Scriptable {
+public final class UniqueCharRule implements PasswordRule, Scriptable {
 
   /**
    * The array of scores.
    */
-  private ScoreFunction _function;
+  private ScoreFunction _function = LinearScore.IDENTITY;
 
   @Override
   public int score(String password) {
@@ -60,9 +70,9 @@ public class UniqueCharRule implements PasswordRule, Scriptable {
     script.append(" var f = ");
     this._function.toScript(script).append(";");
     script.append(" var u = '';");
-    script.append(" for (var i = 0; i < p.length; i++) {");
+    script.append(" if (p) {for (var i = 0; i < p.length; i++) {");
     script.append("  if (u.indexOf(p.charAt(i)) === -1) { u += p.charAt(i); }");
-    script.append(" }");
+    script.append(" }}");
     script.append(" return f(u.length);");
     script.append("}");
     return script;
