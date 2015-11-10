@@ -133,7 +133,8 @@ public abstract class PasswordRuleTestBase {
       script.append("'").append(password).append("'");
     }
     script.append(")");
-    return (int)Math.round((Double)engine.eval(script.toString()));
+    Object o = engine.eval(script.toString());
+    return ((Number)o).intValue();
   }
 
 }
