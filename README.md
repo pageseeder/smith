@@ -1,3 +1,5 @@
+[ ![Download](https://api.bintray.com/packages/pageseeder/maven/smith/images/download.svg) ](https://bintray.com/pageseeder/maven/smith/_latestVersion)
+
 # Smith
 
 This library provides a simple and configurable password strengh meter in Java.
