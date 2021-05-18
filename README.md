@@ -1,4 +1,4 @@
-[ ![Download](https://api.bintray.com/packages/pageseeder/maven/smith/images/download.svg) ](https://bintray.com/pageseeder/maven/smith/_latestVersion)
+[![Maven Central](https://img.shields.io/maven-central/v/org.pageseeder.smith/pso-smith.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22org.pageseeder.smith%22%20AND%20a:%22pso-smith%22)
 
 # Smith
 
